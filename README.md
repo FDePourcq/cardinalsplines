@@ -1,7 +1,7 @@
-## cardinalsplines
+# cardinalsplines
 Generic c++ function to build a [cardinal spline](https://en.wikipedia.org/wiki/Cubic_Hermite_spline#Cardinal_spline) from a sequence of points.
 
-#signature
+## signature
 ```
 
 /*
@@ -25,7 +25,7 @@ void cardinalpoints(point_type const *const vertices,
 ```
 
 
-#building
+## building
 ```
 $ git clone https://github.com/FDePourcq/cardinalsplines.git
 Cloning into 'cardinalsplines'...
