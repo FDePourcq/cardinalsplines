@@ -162,7 +162,6 @@ struct Point {
  * - num_vertices: the amount of points
  * - granularity: the desired amount of segments between consecutive points
  * - tension: magic value between 0 and 1. see https://en.wikipedia.org/wiki/Cubic_Hermite_spline#Cardinal_spline
- *         0.5 gives reasonable results.
  * - close: wether the sequence of vertices should be considered a closed loop or not.
  * - cf: callbackfunction, it will be called for each generated vertex.
  */
@@ -207,8 +206,8 @@ void cardinalpoints(point_type const *const vertices,
                                      const point_type &v1,
                                      const point_type &v2) {
 
-        const auto m0 = (v1 - vm1) * (1.0 - tension); // starting tangent
-        const auto m1 = (v2 - v0) * (1.0 - tension); // ending tangent
+        const auto m0 = (v1 - vm1) * (1.0 - tension) / 2.0; // starting tangent
+        const auto m1 = (v2 - v0) * (1.0 - tension) / 2.0; // ending tangent
 
         for (std::size_t t = 0; t < numOfSeg; t++) {
             const auto &c = cardinals[t];
@@ -276,8 +275,10 @@ void printCardinalSpline(std::size_t granularity, double tension, double close, 
 int main(int argc, char *argv[]) {
     const std::size_t granularity = argc > 1 ? atoi(argv[1]) : 20;
 
+    double tension = 0;
+
     //C
-    printCardinalSpline(granularity, 0.5, false, std::array<Point<double, 2>, 4>{
+    printCardinalSpline(granularity, tension, false, std::array<Point<double, 2>, 4>{
             Point<double, 2>{1., 2.},
             Point<double, 2>{0., 2.},
             Point<double, 2>{0., 0.},
@@ -286,7 +287,7 @@ int main(int argc, char *argv[]) {
 
 
     //A
-    printCardinalSpline(granularity, 0.5, false, std::array<Point<double, 2>, 6>{
+    printCardinalSpline(granularity, tension, false, std::array<Point<double, 2>, 6>{
             Point<double, 2>{1.5, 0.},
             Point<double, 2>{2., 2.},
             Point<double, 2>{2.25, 1.},
@@ -295,7 +296,7 @@ int main(int argc, char *argv[]) {
             Point<double, 2>{2.5, 0.},
     });
     //R
-    printCardinalSpline(granularity, 0.5, false, std::array<Point<double, 2>, 5>{
+    printCardinalSpline(granularity, tension, false, std::array<Point<double, 2>, 5>{
             Point<double, 2>{3., 0.},
             Point<double, 2>{3., 2.},
             Point<double, 2>{4., 1.5},
@@ -303,7 +304,7 @@ int main(int argc, char *argv[]) {
             Point<double, 2>{4., 0.},
     });
     //D
-    printCardinalSpline(granularity, 0.5, false, std::array<Point<double, 2>, 4>{
+    printCardinalSpline(granularity, tension, false, std::array<Point<double, 2>, 4>{
             Point<double, 2>{4.5, 0.},
             Point<double, 2>{4.5, 2.},
             Point<double, 2>{5.5, 1.},
@@ -311,7 +312,7 @@ int main(int argc, char *argv[]) {
     });
 
     // i dot
-    printCardinalSpline(granularity, 0.5, true, std::array<Point<double, 2>, 4>{
+    printCardinalSpline(granularity, tension, true, std::array<Point<double, 2>, 4>{
             Point<double, 2>{6., 1.75},
             Point<double, 2>{6. - 0.125, 1.75 + 0.125},
             Point<double, 2>{6., 2.},
@@ -319,14 +320,14 @@ int main(int argc, char *argv[]) {
     });
 
     // i base
-    printCardinalSpline(granularity, 0.5, false, std::array<Point<double, 2>, 3>{
+    printCardinalSpline(granularity, tension, false, std::array<Point<double, 2>, 3>{
             Point<double, 2>{6., 0.},
             Point<double, 2>{6., 1.5},
             Point<double, 2>{6., 0.},
     });
 
     // n
-    printCardinalSpline(granularity, 0.5, false, std::array<Point<double, 2>, 4>{
+    printCardinalSpline(granularity, tension, false, std::array<Point<double, 2>, 4>{
             Point<double, 2>{6.5, 0.},
             Point<double, 2>{6.5, 2.},
             Point<double, 2>{7.5, 0.},
@@ -334,7 +335,7 @@ int main(int argc, char *argv[]) {
     });
 
     //A
-    printCardinalSpline(granularity, 0.5, false, std::array<Point<double, 2>, 6>{
+    printCardinalSpline(granularity, tension, false, std::array<Point<double, 2>, 6>{
             Point<double, 2>{8., 0.},
             Point<double, 2>{8.5, 2.},
             Point<double, 2>{8.75, 1.},
@@ -344,7 +345,7 @@ int main(int argc, char *argv[]) {
     });
 
     //L
-    printCardinalSpline(granularity, 0.5, false, std::array<Point<double, 2>, 3>{
+    printCardinalSpline(granularity, tension, false, std::array<Point<double, 2>, 3>{
             Point<double, 2>{9.5, 2.},
             Point<double, 2>{9.5, 0.},
             Point<double, 2>{10.5, 0.},
@@ -352,7 +353,7 @@ int main(int argc, char *argv[]) {
 
 
     //S
-    printCardinalSpline(granularity, 0.5, false, std::array<Point<double, 2>, 4>{
+    printCardinalSpline(granularity, tension, false, std::array<Point<double, 2>, 4>{
             Point<double, 2>{1., -1.},
             Point<double, 2>{0., -1.5},
             Point<double, 2>{1., -2.5},
@@ -360,7 +361,7 @@ int main(int argc, char *argv[]) {
     });
 
     //P
-    printCardinalSpline(granularity, 0.5, false, std::array<Point<double, 2>, 4>{
+    printCardinalSpline(granularity, tension, false, std::array<Point<double, 2>, 4>{
             Point<double, 2>{1.5, -2.},
             Point<double, 2>{2.5, -1.5},
             Point<double, 2>{1.5, -1.},
@@ -369,14 +370,14 @@ int main(int argc, char *argv[]) {
 
 
     //L
-    printCardinalSpline(granularity, 0.5, false, std::array<Point<double, 2>, 3>{
+    printCardinalSpline(granularity, tension, false, std::array<Point<double, 2>, 3>{
             Point<double, 2>{3., -1.},
             Point<double, 2>{3., -3.},
             Point<double, 2>{4., -3.},
     });
 
 // i dot
-    printCardinalSpline(granularity, 0.5, true, std::array<Point<double, 2>, 4>{
+    printCardinalSpline(granularity, tension, true, std::array<Point<double, 2>, 4>{
             Point<double, 2>{4.5, 1.75 - 3.0},
             Point<double, 2>{4.5 - 0.125, 1.75 + 0.125 - 3.0},
             Point<double, 2>{4.5, 2 - 3.0},
@@ -384,14 +385,14 @@ int main(int argc, char *argv[]) {
     });
 
     // i base
-    printCardinalSpline(granularity, 0.5, false, std::array<Point<double, 2>, 3>{
+    printCardinalSpline(granularity, tension, false, std::array<Point<double, 2>, 3>{
             Point<double, 2>{4.5, 0 - 3.0},
             Point<double, 2>{4.5, 1.5 - 3.0},
             Point<double, 2>{4.5, 0 - 3.0},
     });
 
     // n
-    printCardinalSpline(granularity, 0.5, false, std::array<Point<double, 2>, 4>{
+    printCardinalSpline(granularity, tension, false, std::array<Point<double, 2>, 4>{
             Point<double, 2>{5., -3.0},
             Point<double, 2>{5., -1.0},
             Point<double, 2>{6., -3.0},
@@ -399,7 +400,7 @@ int main(int argc, char *argv[]) {
     });
 
     // E
-    printCardinalSpline(granularity, 0.5, false, std::array<Point<double, 2>, 7>{
+    printCardinalSpline(granularity, tension, false, std::array<Point<double, 2>, 7>{
             Point<double, 2>{7.5, 0 - 1.0},
             Point<double, 2>{6.5, 0 - 1.0},
             Point<double, 2>{6.5, 0 - 2.0},
@@ -410,7 +411,7 @@ int main(int argc, char *argv[]) {
     });
 
     //S
-    printCardinalSpline(granularity, 0.5, false, std::array<Point<double, 2>, 4>{
+    printCardinalSpline(granularity, tension, false, std::array<Point<double, 2>, 4>{
             Point<double, 2>{1 + 8., -1.},
             Point<double, 2>{0 + 8., -1.5},
             Point<double, 2>{1 + 8., -2.5},
