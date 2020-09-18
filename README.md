@@ -40,6 +40,6 @@ $ make gnuplot
 [100%] Built target cardinalsplines
 Scanning dependencies of target gnuplot
 Warning: empty cb range [0:0], adjusting to [-1:1]
-``` :
+``` 
 
 ![](output.png)
