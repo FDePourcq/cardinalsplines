@@ -195,10 +195,10 @@ void cardinalpoints(point_type const *const vertices,
         const double st2pow3 = stpow3 * 2.0;
         const double st3pow2 = stpow2 * 3.0;
 
-        cardinals[i] = {st2pow3 - st3pow2 + 1.0,
-                        st3pow2 - st2pow3,
-                        stpow3 - 2.0 * stpow2 + st,
-                        stpow3 - stpow2,
+        cardinals[i] = {st2pow3 - st3pow2 + 1.0,    // coefficient of p0
+                        st3pow2 - st2pow3,          // coefficient of p1
+                        stpow3 - 2.0 * stpow2 + st, // coefficient of m0
+                        stpow3 - stpow2,            // coefficient of m1
         };
     }
 
@@ -207,12 +207,12 @@ void cardinalpoints(point_type const *const vertices,
                                      const point_type &v1,
                                      const point_type &v2) {
 
-        const auto t1 = (v1 - vm1) * tension;
-        const auto t2 = (v2 - v0) * tension;
-//        cf(v0);
+        const auto m0 = (v1 - vm1) * (1.0 - tension); // starting tangent
+        const auto m1 = (v2 - v0) * (1.0 - tension); // ending tangent
+
         for (std::size_t t = 0; t < numOfSeg; t++) {
             const auto &c = cardinals[t];
-            cf(v0 * c.c1 + v1 * c.c2 + t1 * c.c3 + t2 * c.c4);
+            cf(v0 * c.c1 + v1 * c.c2 + m0 * c.c3 + m1 * c.c4);
         }
     };
 

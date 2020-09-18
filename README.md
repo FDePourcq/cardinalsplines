@@ -1,7 +1,31 @@
-# cardinalsplines
-Generic c++ function to build a cardinal spline from a sequence of points.
+## cardinalsplines
+Generic c++ function to build a [cardinal spline](https://en.wikipedia.org/wiki/Cubic_Hermite_spline#Cardinal_spline) from a sequence of points.
+
+#signature
+```
+
+/*
+ * @params:
+ * - vertices: the points that need to be interpolated. The actual type can be anything as long as some basic operators are defined.
+ * - num_vertices: the amount of points
+ * - granularity: the desired amount of segments between consecutive points
+ * - tension: magic value between 0 and 1. see https://en.wikipedia.org/wiki/Cubic_Hermite_spline#Cardinal_spline
+ *         0.5 gives reasonable results.
+ * - close: wether the sequence of vertices should be considered a closed loop or not.
+ * - cf: callbackfunction, it will be called for each generated vertex.
+ */
+
+template<typename point_type, typename callbackfct>
+void cardinalpoints(point_type const *const vertices,
+                    const std::size_t num_vertices,
+                    const std::size_t granularity,
+                    const double tension,
+                    const bool close,
+                    const callbackfct &cf) {
+```
 
 
+#building
 ```
 $ git clone https://github.com/FDePourcq/cardinalsplines.git
 Cloning into 'cardinalsplines'...
